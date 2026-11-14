@@ -1,0 +1,22 @@
+{
+  "appId": "com.mrdon.server",
+  "appName": "Archive",
+  "webDir": "www",
+  "bundledWebRuntime": false,
+  "server": {
+    "androidScheme": "https"
+  },
+  "plugins": {
+    "StatusBar": {
+      "style": "DARK",
+      "backgroundColor": "#0B0D13",
+      "overlaysWebView": false
+    }
+  },
+  "android": {
+    "backgroundColor": "#0B0D13",
+    "overScrollMode": "never",
+    "webContentsDebuggingEnabled": false,
+    "allowMixedContent": true
+  }
+}

@@ -1,0 +1,487 @@
+// ════════════════════════════════════════════════════════════════════
+//  NIGHT ARCHIVE — private backup client for a home NAS
+// ════════════════════════════════════════════════════════════════════
+
+@use 'tokens' as *;
+
+// Self-hosted variable fonts (no CDN, offline-safe).
+@import '@fontsource-variable/fraunces/index.css';
+@import '@fontsource-variable/hanken-grotesk/index.css';
+
+// ──────────────────────────────────────────────────────────────
+//  Base
+// ──────────────────────────────────────────────────────────────
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  background: $ink-0 !important;
+  color: $paper;
+  font-family: $font-body;
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body.body--dark { background: $ink-0 !important; }
+
+#q-app {
+  background: $ink-0;
+  min-height: 100vh;
+}
+
+::selection {
+  background: $marigold-soft;
+  color: $paper;
+}
+
+// ──────────────────────────────────────────────────────────────
+//  Typography
+// ──────────────────────────────────────────────────────────────
+
+.display {
+  font-family: $font-display;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  color: $paper;
+}
+
+.display-xl {
+  @extend .display;
+  font-size: clamp(44px, 9vw, 72px);
+}
+.display-l {
+  @extend .display;
+  font-size: 32px;
+  line-height: 1.2;
+}
+.title {
+  font-family: $font-display;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 1.3;
+  color: $paper;
+}
+
+.body       { font-family: $font-body; font-weight: 400; font-size: 15px; line-height: 1.5; color: $paper; }
+.body-sm    { font-family: $font-body; font-weight: 400; font-size: 13px; line-height: 1.45; color: $paper; }
+.body-mute  { color: $paper-mute; }
+.body-dim   { color: $paper-dim; }
+
+.caption-sc {
+  font-family: $font-body;
+  font-weight: 500;
+  font-size: 11px;
+  line-height: 1.2;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: $paper-dim;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum';
+}
+
+.mono-fig {
+  font-family: $font-display;
+  font-variant-numeric: tabular-nums;
+  font-size: 14px;
+  color: $paper;
+}
+
+// ──────────────────────────────────────────────────────────────
+//  Surfaces
+// ──────────────────────────────────────────────────────────────
+
+.surface         { background: $ink-1; }
+.surface-raised  { background: $ink-2; }
+
+.rule            { border-top: 1px solid $rule; }
+.rule-soft       { border-top: 1px solid $rule-soft; }
+.rule-l          { border-left: 1px solid $rule; }
+.rule-b          { border-bottom: 1px solid $rule; }
+
+// ──────────────────────────────────────────────────────────────
+//  Colour utilities
+// ──────────────────────────────────────────────────────────────
+
+.paper        { color: $paper; }
+.paper-mute   { color: $paper-mute; }
+.paper-dim    { color: $paper-dim; }
+.marigold     { color: $marigold; }
+.slate        { color: $slate; }
+.rust         { color: $rust; }
+.moss         { color: $moss; }
+
+.bg-ink-0     { background: $ink-0; }
+.bg-ink-1     { background: $ink-1; }
+.bg-ink-2     { background: $ink-2; }
+.bg-marigold  { background: $marigold; color: $ink-0; }
+
+// ──────────────────────────────────────────────────────────────
+//  Structural helpers
+// ──────────────────────────────────────────────────────────────
+
+.page-pad     { padding: $s-5 $s-4; }
+.page-pad-x   { padding-left: $s-4; padding-right: $s-4; }
+.section      { padding: $s-6 $s-4 $s-5; }
+
+.stack > * + * { margin-top: $s-3; }
+.stack-lg > * + * { margin-top: $s-5; }
+
+.row-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $s-3;
+  padding: $s-3 0;
+  border-bottom: 1px solid $rule-soft;
+}
+
+// env(safe-area-inset-top) reports the real Android status-bar height once
+// viewport-fit=cover is set in index.html (which it is). The 24px floor is a
+// safety net for split-screen, tablet launch, and OEM quirks that report 0.
+.safe-top    { padding-top: max(env(safe-area-inset-top, 0px), 24px); }
+.safe-bottom { padding-bottom: env(safe-area-inset-bottom, 0px); }
+
+// ──────────────────────────────────────────────────────────────
+//  Focus rings (keyboard / a11y) — applied globally, then opted
+//  out per-element where a custom ring is provided.
+// ──────────────────────────────────────────────────────────────
+
+button, a, [role="button"], [tabindex]:not([tabindex="-1"]),
+input, select, textarea {
+  &:focus { outline: none; }
+  &:focus-visible {
+    outline: 2px solid $marigold;
+    outline-offset: 2px;
+    border-radius: $r-sm;
+  }
+}
+
+// ──────────────────────────────────────────────────────────────
+//  Buttons
+// ──────────────────────────────────────────────────────────────
+
+.btn-archive {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $s-2;
+  min-height: $tap-min;
+  padding: 0 $s-5;
+  font-family: $font-body;
+  font-weight: 500;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  color: $ink-0;
+  background: $marigold;
+  border: none;
+  border-radius: $r-sm;
+  cursor: pointer;
+  transition: background $dur-fast $ease-archive;
+
+  &:hover { background: lighten($marigold, 4%); }
+  &:focus-visible {
+    background: lighten($marigold, 4%);
+    outline: 2px solid $paper;
+    outline-offset: 2px;
+  }
+  &:active { background: darken($marigold, 6%); }
+  &:disabled, &[disabled] { background: $marigold-mute; color: rgba(11,13,19,0.6); cursor: not-allowed; }
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $s-2;
+  min-height: $tap-min;
+  padding: 0 $s-4;
+  font-family: $font-body;
+  font-weight: 500;
+  font-size: 14px;
+  color: $paper;
+  background: transparent;
+  border: 1px solid $rule;
+  border-radius: $r-sm;
+  cursor: pointer;
+  transition: border-color $dur-fast $ease-archive, background $dur-fast $ease-archive;
+
+  &:hover { border-color: $paper-mute; background: $ink-1; }
+  &:focus-visible { border-color: $marigold; background: $ink-1; }
+  &:active { background: $ink-2; }
+}
+
+// Lightweight inline link-style action — for safe operations inside
+// section headers (e.g. "select all", "clear filter"). No border, no fill.
+.btn-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $s-1;
+  min-height: 32px;
+  padding: 0 $s-2;
+  font-family: $font-body;
+  font-weight: 500;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: $paper-mute;
+  background: transparent;
+  border: none;
+  border-radius: $r-sm;
+  cursor: pointer;
+  transition: color $dur-fast $ease-archive;
+
+  &:hover { color: $paper; }
+  &:active { color: $marigold; }
+}
+
+// Destructive solid — for prominent actions like footer "Delete selected"
+// where the user has already picked targets and needs clear affordance.
+// Solid rust on ink background so it sits on dark chrome without looking
+// like a browser-default button.
+.btn-danger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $s-2;
+  min-height: $tap-min;
+  padding: 0 $s-5;
+  font-family: $font-body;
+  font-weight: 500;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  color: $ink-0;
+  background: $rust;
+  border: none;
+  border-radius: $r-sm;
+  cursor: pointer;
+  transition: background $dur-fast $ease-archive;
+
+  &:hover { background: lighten($rust, 4%); }
+  &:focus-visible {
+    background: lighten($rust, 4%);
+    outline: 2px solid $paper;
+    outline-offset: 2px;
+  }
+  &:active { background: darken($rust, 6%); }
+  &:disabled, &[disabled] { background: rgba(200, 90, 60, 0.4); color: rgba(11,13,19,0.6); cursor: not-allowed; }
+}
+
+// Destructive ghost — same metrics as btn-ghost but reads as risky
+// at a glance (rust border + label). For "clear history", "reset", etc.
+.btn-danger-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $s-2;
+  min-height: $tap-min;
+  padding: 0 $s-4;
+  font-family: $font-body;
+  font-weight: 500;
+  font-size: 14px;
+  color: $rust;
+  background: transparent;
+  border: 1px solid rgba(200, 90, 60, 0.5);
+  border-radius: $r-sm;
+  cursor: pointer;
+  transition: border-color $dur-fast $ease-archive, background $dur-fast $ease-archive;
+
+  &:hover, &:focus-visible { border-color: $rust; background: rgba(200, 90, 60, 0.08); }
+  &:active { background: rgba(200, 90, 60, 0.16); }
+}
+
+// ──────────────────────────────────────────────────────────────
+//  Page header (compact). Replaces poetic display-l heroes on
+//  utility/list pages — caption + title fit in one row, leaves
+//  room above the fold for actual content.
+// ──────────────────────────────────────────────────────────────
+
+.page-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: $s-3;
+  padding: $s-5 $s-4 $s-4;
+  border-bottom: 1px solid $rule-soft;
+
+  &__body { min-width: 0; }
+  &__title {
+    font-family: $font-display;
+    font-weight: 500;
+    font-size: 22px;
+    letter-spacing: -0.01em;
+    color: $paper;
+    line-height: 1.15;
+    margin-top: 4px;
+  }
+  &__sub {
+    font-family: $font-body;
+    font-size: 12px;
+    color: $paper-mute;
+    margin-top: 4px;
+  }
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: $s-2;
+    flex-shrink: 0;
+  }
+}
+
+// ──────────────────────────────────────────────────────────────
+//  Quasar overrides (kept minimal; prefer our own classes)
+// ──────────────────────────────────────────────────────────────
+
+.q-page { background: $ink-0 !important; }
+
+.q-card, .q-menu, .q-dialog__inner > .q-card {
+  background: $ink-1 !important;
+  color: $paper !important;
+  border: 1px solid $rule;
+  border-radius: $r-md;
+  box-shadow: $elev-dialog;
+}
+
+.q-item { color: $paper; }
+.q-item__label--caption { color: $paper-mute; }
+.q-separator { background: $rule-soft; }
+
+.q-btn { font-family: $font-body; font-weight: 500; letter-spacing: 0.02em; border-radius: $r-sm; }
+
+.q-input, .q-field {
+  .q-field__native, .q-field__input {
+    font-family: $font-body;
+    color: $paper;
+  }
+  .q-field__label { color: $paper-mute; }
+}
+
+.q-tab {
+  font-family: $font-body;
+  font-weight: 500;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: $paper-dim;
+
+  &--active { color: $marigold; }
+  .q-tab__indicator { background: $marigold; height: 1px; }
+}
+
+.q-linear-progress {
+  color: $marigold;
+  background: $rule-soft;
+}
+
+.q-toggle__inner--truthy .q-toggle__track { background: $marigold; }
+
+// ──────────────────────────────────────────────────────────────
+//  Animations
+// ──────────────────────────────────────────────────────────────
+
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(90deg, $ink-1 0%, $ink-2 50%, $ink-1 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.8s ease-in-out infinite;
+  border-radius: $r-sm;
+}
+
+// Page-load stagger: children appear one after another at 40ms steps.
+.staircase > * {
+  opacity: 0;
+  animation: fadeSlideIn $dur-base $ease-archive forwards;
+
+  @for $i from 1 through 24 {
+    &:nth-child(#{$i}) { animation-delay: #{$i * 40}ms; }
+  }
+}
+
+// ──────────────────────────────────────────────────────────────
+//  Page transitions
+// ──────────────────────────────────────────────────────────────
+
+.slide-left-enter-active, .slide-left-leave-active,
+.slide-right-enter-active, .slide-right-leave-active {
+  transition: opacity $dur-base $ease-archive, transform $dur-base $ease-archive;
+}
+.slide-left-enter-from  { opacity: 0; transform: translateX(16px); }
+.slide-left-leave-to    { opacity: 0; transform: translateX(-16px); }
+.slide-right-enter-from { opacity: 0; transform: translateX(-16px); }
+.slide-right-leave-to   { opacity: 0; transform: translateX(16px); }
+
+.fade-enter-active, .fade-leave-active { transition: opacity $dur-base $ease-archive; }
+.fade-enter-from, .fade-leave-to { opacity: 0; }
+
+// ──────────────────────────────────────────────────────────────
+//  Scrollbars
+// ──────────────────────────────────────────────────────────────
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: $rule; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: $paper-dim; }
+
+// ──────────────────────────────────────────────────────────────
+//  Empty / loading / error helpers
+// ──────────────────────────────────────────────────────────────
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: $s-8 $s-5;
+  text-align: center;
+  gap: $s-3;
+
+  &__eyebrow {
+    font-family: $font-body;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: $paper-dim;
+  }
+  &__title {
+    font-family: $font-display;
+    font-size: 28px;
+    line-height: 1.15;
+    color: $paper;
+    letter-spacing: -0.01em;
+  }
+  &__subtitle {
+    font-family: $font-body;
+    font-size: 14px;
+    color: $paper-mute;
+    max-width: 36ch;
+  }
+}
+
+// Lift bottom-positioned toasts above the footer tab bar + any safe-area inset
+// (gesture handle, etc.) so they're never hidden behind the nav. The tab bar
+// is ~62px tall; add a bit more to float above it visibly.
+.q-notifications__list--bottom {
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 110px);
+}
+.notify-lift {
+  border-radius: 8px !important;
+}

@@ -1,0 +1,18 @@
+{
+  "name": "Server",
+  "version": "1.0.0",
+  "description": "Archive — private photo & file vault over SMB",
+  "private": true,
+  "dependencies": {
+    "@capacitor/android": "^6.2.0",
+    "@capacitor/app": "^6.0.0",
+    "@capacitor/core": "^6.2.0",
+    "@capacitor/filesystem": "^6.0.0",
+    "@capacitor/haptics": "^6.0.0",
+    "@capacitor/preferences": "^6.0.4",
+    "@capacitor/status-bar": "^6.0.0",
+    "@capawesome/capacitor-file-picker": "^8.0.2",
+    "capacitor-native-biometric": "^4.2.2"
+  },
+  "author": "MrDoN"
+}

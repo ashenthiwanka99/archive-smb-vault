@@ -1,0 +1,110 @@
+// Night Archive — design tokens
+// Single source of truth. SCSS vars for build-time use; CSS custom properties
+// so component <style scoped> blocks can reference tokens without re-declaring hex.
+
+// ─── Palette ─────────────────────────────────────────────────────────────
+
+$ink-0:        #0B0D13; // page ground (deepest)
+$ink-1:        #11141C; // surface / card
+$ink-2:        #191D27; // surface raised / dialog
+$ink-3:        #222734; // hover / pressed
+
+$rule:         #262B38; // hairline dividers
+$rule-soft:    #1C2029; // subtler dividers
+
+$paper:        #EFE7D4; // primary text (bone)
+$paper-mute:   #A59E8D; // secondary text
+$paper-dim:    #6A6558; // captions, small caps
+
+$marigold:     #E8A33D;
+$marigold-mute:#8A6024;
+$marigold-soft:rgba(232, 163, 61, 0.12);
+
+$slate:        #6FA8DC;
+$rust:         #C85A3C;
+$moss:         #7EA577;
+
+// ─── Typography ──────────────────────────────────────────────────────────
+
+$font-display: 'Fraunces Variable', 'Fraunces', 'Iowan Old Style', Georgia, serif;
+$font-body:    'Hanken Grotesk Variable', 'Hanken Grotesk', -apple-system, system-ui, sans-serif;
+
+// ─── Spacing (4-based) ───────────────────────────────────────────────────
+
+$s-1:  4px;
+$s-2:  8px;
+$s-3: 12px;
+$s-4: 16px;
+$s-5: 24px;
+$s-6: 32px;
+$s-7: 48px;
+$s-8: 72px;
+$s-9: 96px;
+
+// ─── Radii ───────────────────────────────────────────────────────────────
+
+$r-sm:  4px;
+$r-md:  8px;
+$r-lg: 14px;
+
+// ─── Icon sizes (4 tokens, no others) ───────────────────────────────────
+
+$icon-xs: 14px; // inline metadata, sub-text icons
+$icon-sm: 16px; // dense controls, button-leading icons
+$icon-md: 20px; // standard controls, list-row trailing
+$icon-lg: 24px; // emphasized controls, hero icons
+
+// ─── Touch targets (Material 48dp / iOS 44pt) ───────────────────────────
+
+$tap-min: 44px;
+
+// ─── Elevation ───────────────────────────────────────────────────────────
+
+$elev-dialog: 0 24px 48px -24px rgba(0, 0, 0, 0.6), 0 2px 4px rgba(0, 0, 0, 0.2);
+
+// ─── Motion ──────────────────────────────────────────────────────────────
+
+$ease-archive: cubic-bezier(0.2, 0.8, 0.2, 1);
+$dur-fast:  120ms;
+$dur-base:  220ms;
+$dur-slow:  380ms;
+
+// ─── Mirror into :root so scoped styles can use var(--name) ──────────────
+
+:root {
+  --ink-0:        #{$ink-0};
+  --ink-1:        #{$ink-1};
+  --ink-2:        #{$ink-2};
+  --ink-3:        #{$ink-3};
+  --rule:         #{$rule};
+  --rule-soft:    #{$rule-soft};
+  --paper:        #{$paper};
+  --paper-mute:   #{$paper-mute};
+  --paper-dim:    #{$paper-dim};
+  --marigold:     #{$marigold};
+  --marigold-mute:#{$marigold-mute};
+  --marigold-soft:#{$marigold-soft};
+  --slate:        #{$slate};
+  --rust:         #{$rust};
+  --moss:         #{$moss};
+
+  --font-display: #{$font-display};
+  --font-body:    #{$font-body};
+
+  --s-1: #{$s-1}; --s-2: #{$s-2}; --s-3: #{$s-3}; --s-4: #{$s-4};
+  --s-5: #{$s-5}; --s-6: #{$s-6}; --s-7: #{$s-7}; --s-8: #{$s-8}; --s-9: #{$s-9};
+
+  --r-sm: #{$r-sm}; --r-md: #{$r-md}; --r-lg: #{$r-lg};
+
+  --icon-xs: #{$icon-xs}; --icon-sm: #{$icon-sm};
+  --icon-md: #{$icon-md}; --icon-lg: #{$icon-lg};
+
+  --tap-min: #{$tap-min};
+
+  --elev-dialog: #{$elev-dialog};
+
+  --ease-archive: #{$ease-archive};
+  --dur-fast: #{$dur-fast};
+  --dur-base: #{$dur-base};
+  --dur-slow: #{$dur-slow};
+}

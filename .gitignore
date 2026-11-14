@@ -1,0 +1,32 @@
+# Build output
+dist/
+*.apk
+src-capacitor/www/
+src-capacitor/android/build/
+src-capacitor/android/app/build/
+src-capacitor/android/.gradle/
+
+# Dependencies
+node_modules/
+
+# Signing / secrets — NEVER commit these
+*.jks
+*.keystore
+keystore.properties
+keystore.password
+signing.properties
+mrdon-release.*
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+*.log
+
+# Quasar
+.quasar/
+
+# Local env
+.env
+.env.local

@@ -1,0 +1,15 @@
+// Quasar framework token overrides. Night Archive palette.
+// These are consumed by Quasar's own SCSS at build time and cannot reference
+// CSS custom properties — hex codes are kept in sync with _tokens.scss manually.
+
+$primary   : #E8A33D; // marigold — CTAs, active states
+$secondary : #6FA8DC; // slate — informational
+$accent    : #E8A33D;
+
+$dark      : #0B0D13; // ink-0
+$dark-page : #0B0D13;
+
+$positive  : #7EA577; // moss
+$negative  : #C85A3C; // rust
+$info      : #6FA8DC; // slate
+$warning   : #E8A33D; // marigold
